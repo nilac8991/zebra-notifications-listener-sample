@@ -1,34 +1,49 @@
 package com.nilac.zebra.znotificationssamplelistener.service
 
 import android.app.Notification
+import android.content.pm.PackageManager
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
+import com.nilac.zebra.znotificationssamplelistener.data.NotificationStore
+import com.nilac.zebra.znotificationssamplelistener.model.NotificationRecord
 
 
 class MainListener : NotificationListenerService() {
 
     override fun onListenerConnected() {
         Log.d(TAG, "Listener connected")
-        activeNotifications?.forEach { logNotification("active", it) }
+        activeNotifications?.forEach { NotificationStore.upsert(it.toRecord()) }
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
-        logNotification("posted", sbn)
+        Log.d(TAG, "posted | ${sbn.key}")
+        NotificationStore.upsert(sbn.toRecord())
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
-        logNotification("removed", sbn)
+        Log.d(TAG, "removed | ${sbn.key}")
+        NotificationStore.markRemoved(sbn.key)
     }
 
-    private fun logNotification(event: String, sbn: StatusBarNotification) {
-        val extras = sbn.notification.extras
-        val title = extras.getCharSequence(Notification.EXTRA_TITLE)
-        val text = extras.getCharSequence(Notification.EXTRA_TEXT)
-        Log.d(
-            TAG,
-            "$event | pkg=${sbn.packageName} | title=$title | text=$text | postTime=${sbn.postTime} | key=${sbn.key}"
+    private fun StatusBarNotification.toRecord(): NotificationRecord {
+        val extras = notification.extras
+        return NotificationRecord(
+            key = key,
+            packageName = packageName,
+            appLabel = extractAppLabel(packageName),
+            title = extras.getCharSequence(Notification.EXTRA_TITLE)?.toString(),
+            text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString(),
+            postTime = postTime,
         )
+    }
+
+    /** Human-readable app name, falling back to the package name if it can't be resolved. */
+    private fun extractAppLabel(packageName: String): String = try {
+        val info = this.packageManager.getApplicationInfo(packageName, 0)
+        this.packageManager.getApplicationLabel(info).toString()
+    } catch (e: PackageManager.NameNotFoundException) {
+        packageName
     }
 
     private companion object {

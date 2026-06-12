@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">ZNotifications Sample Listener</string>
-    <string name="p1_hint">Listener running.\nGrant Notification access, then watch Logcat (tag: MainListener).</string>
+    <string name="status_checking">Checking notification access…</string>
+    <string name="status_granted">Notification access: granted</string>
+    <string name="status_denied">Notification access: not granted</string>
+    <string name="open_notification_access">Open Notification access</string>
+    <string name="removed_tag">REMOVED</string>
 </resources>
