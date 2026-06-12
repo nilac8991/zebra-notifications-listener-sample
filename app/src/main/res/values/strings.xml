@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ZNotifications Sample Listener</string>
+    <string name="p1_hint">Listener running.\nGrant Notification access, then watch Logcat (tag: MainListener).</string>
 </resources>
