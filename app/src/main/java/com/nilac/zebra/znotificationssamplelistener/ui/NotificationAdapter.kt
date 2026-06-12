@@ -4,9 +4,11 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.nilac.zebra.znotificationssamplelistener.R
 import com.nilac.zebra.znotificationssamplelistener.databinding.ItemNotificationBinding
 import com.nilac.zebra.znotificationssamplelistener.model.NotificationRecord
 import java.text.SimpleDateFormat
@@ -37,8 +39,13 @@ class NotificationAdapter :
             postTime.text = TIME_FORMAT.format(Date(record.postTime))
 
             removedTag.visibility = if (record.removed) ViewGroup.VISIBLE else ViewGroup.GONE
-            val alpha = if (record.removed) 0.5f else 1f
-            root.alpha = alpha
+            root.alpha = if (record.removed) 0.6f else 1f
+            accent.setBackgroundColor(
+                ContextCompat.getColor(
+                    root.context,
+                    if (record.removed) R.color.row_accent_removed else R.color.row_accent
+                )
+            )
             appLabel.strike(record.removed)
             notificationTitle.strike(record.removed)
         }

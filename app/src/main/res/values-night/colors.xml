@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand (a touch brighter on dark surfaces) -->
+    <color name="primary_color">#A5B4FC</color>
+    <color name="on_primary_color">#1E1B4B</color>
+
+    <!-- Status banner (dark) -->
+    <color name="banner_granted_bg">#14331C</color>
+    <color name="banner_granted_text">#81C995</color>
+    <color name="banner_denied_bg">#3A1715</color>
+    <color name="banner_denied_text">#F2877F</color>
+
+    <!-- Row accents (dark) -->
+    <color name="row_accent">#A5B4FC</color>
+    <color name="row_accent_removed">#5F6368</color>
+</resources>

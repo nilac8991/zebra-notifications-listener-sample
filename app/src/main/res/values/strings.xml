@@ -5,4 +5,5 @@
     <string name="status_denied">Notification access: not granted</string>
     <string name="open_notification_access">Open Notification access</string>
     <string name="removed_tag">REMOVED</string>
+    <string name="captured_header">Captured notifications</string>
 </resources>
