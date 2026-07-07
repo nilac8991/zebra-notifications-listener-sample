@@ -58,7 +58,11 @@ class MainActivity : AppCompatActivity() {
             updateAccessStatus()
         }
 
-        mainViewModel.preGrantNotificationListenerPermission()
+        if (!isBindingNotificationListenerGranted()) {
+            mainViewModel.preGrantNotificationListenerPermission()
+        } else {
+            updateAccessStatus()
+        }
     }
 
     override fun onDestroy() {
@@ -78,9 +82,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateAccessStatus() {
-        val granted = NotificationManagerCompat
-            .getEnabledListenerPackages(this)
-            .contains(packageName)
+        val granted = isBindingNotificationListenerGranted()
 
         binding.statusText.setText(
             if (granted) R.string.status_granted else R.string.status_denied
@@ -90,5 +92,11 @@ class MainActivity : AppCompatActivity() {
         binding.statusText.backgroundTintList =
             ColorStateList.valueOf(ContextCompat.getColor(this, bg))
         binding.statusText.setTextColor(ContextCompat.getColor(this, fg))
+    }
+
+    private fun isBindingNotificationListenerGranted(): Boolean {
+        return NotificationManagerCompat
+            .getEnabledListenerPackages(this)
+            .contains(packageName)
     }
 }

@@ -18,6 +18,10 @@ import java.util.Locale
 class NotificationAdapter :
     ListAdapter<NotificationRecord, NotificationAdapter.ViewHolder>(DIFF) {
 
+    init {
+        stateRestorationPolicy = StateRestorationPolicy.PREVENT_WHEN_EMPTY
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemNotificationBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
