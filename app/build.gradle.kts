@@ -46,7 +46,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    implementation(libs.androidx.navigation.ui.ktx)
+
     implementation(libs.kotlinx.coroutines.android)
+
+    //EMDK
+    implementation(libs.emdk)
+    implementation(libs.emdk.loader)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

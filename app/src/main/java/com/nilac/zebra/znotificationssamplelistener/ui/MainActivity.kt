@@ -4,6 +4,9 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -22,6 +25,9 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val mainViewModel: MainViewModel by viewModels()
+
     private val adapter = NotificationAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,26 +35,35 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        applyWindowInsets()
-
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
 
-        binding.openAccessButton.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-        }
+        applyWindowInsets()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 NotificationStore.records.collect(adapter::submitList)
             }
         }
+
+        mainViewModel.bindNotificationListenerResult.observe(this) {
+            val result = it.contentIfNotHandled ?: return@observe
+            if (!result) {
+                Toast.makeText(
+                    this@MainActivity,
+                    "Failed to acquire Manage External Storage permission",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            updateAccessStatus()
+        }
+
+        mainViewModel.preGrantNotificationListenerPermission()
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Re-check on resume: the user may have toggled access while we were in Settings.
-        updateAccessStatus()
+    override fun onDestroy() {
+        super.onDestroy()
+        mainViewModel.bindNotificationListenerResult.removeObservers(this)
     }
 
     private fun applyWindowInsets() {
