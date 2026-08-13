@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             if (!result) {
                 Toast.makeText(
                     this@MainActivity,
-                    "Failed to acquire Manage External Storage permission",
+                    "Failed to acquire permission for notification access",
                     Toast.LENGTH_LONG
                 ).show()
             }
